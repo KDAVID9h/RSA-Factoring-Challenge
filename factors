@@ -13,7 +13,7 @@ def pollard_rho(n):
     
     x = 2
     y = 2
-    d = 1
+    d = 1 
     
     f = lambda x: (x**2 + 1) % n
     
@@ -24,20 +24,9 @@ def pollard_rho(n):
     
     return d
 
-def is_prime(num):
-    """
-    Check if a number is prime.
-    """
-    if num < 2:
-        return False
-    for i in range(2, int(math.sqrt(num)) + 1):
-        if num % i == 0:
-            return False
-    return True
-
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python rsa.py <file>")
+        print("Usage: python factors.py <file>")
         return
 
     file_path = sys.argv[1]
@@ -45,22 +34,20 @@ def main():
     start_time = time.time()
     try:
         with open(file_path, 'r') as file:
-            number = int(file.readline().strip())
+            numbers = file.readlines()
         
-        p = pollard_rho(number)
-        while not is_prime(p):
-            p = pollard_rho(p)
-        q = number // p
-        
-        if p == number or q == number:
-            print(f"{number} is prime.")
-        else:
-            print(f"{number}={p}*{q}")
+        for number in numbers:
+            num = int(number.strip())
+            factor = pollard_rho(num)
+            if factor == num:
+                print(f"{num} is prime.")
+            else:
+                print(f"{num}={factor}*{num // factor}")
 
         if time.time() - start_time > 5:
             print("Time limit exceeded")
             exit()
-    
+
     except FileNotFoundError:
         print(f"File '{file_path}' not found.")
 
